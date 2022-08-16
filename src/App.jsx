@@ -1,16 +1,23 @@
 // Package Imports
-import React from "react";
+import { useState } from "react";
 
 // Local Imports
 import Layout from "./layout/Layout";
-import { AppRoutes } from "./router/AppRouter";
+import Login from "./views/login/Login";
+import { AuthenticatedRoutes } from "./router/AppRouter";
 
 const App = () => {
-  return (
-    <Layout>
-      <AppRoutes />
-    </Layout>
-  );
+  const [isLoggedIn, setLoggedIn] = useState(false);
+
+  if (isLoggedIn) {
+    return (
+      <Layout logout={() => setLoggedIn(false)}>
+        <AuthenticatedRoutes />
+      </Layout>
+    );
+  }
+
+  return <Login login={() => setLoggedIn(true)} />;
 };
 
 export default App;

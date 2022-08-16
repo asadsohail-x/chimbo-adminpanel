@@ -2,18 +2,18 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import reducers from "./reducers";
 
-export const propertyTypesSlice = createSlice({
-  name: "propertyTypes",
+export const listingTypesSlice = createSlice({
+  name: "listingTypes",
   initialState: {
     isLoading: false,
-    propertyTypes: [],
+    listingTypes: [],
     source: [],
   },
   reducers,
 });
 
 export const { startRequest, endRequest, set, del, err, add, update, filter } =
-  propertyTypesSlice.actions;
+  listingTypesSlice.actions;
 
 export const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmUyN2E1MGExZDE3NjU4ZmFhMjhhZDEiLCJlbWFpbCI6ImFzYWRAZ21haWwuY29tIiwiaWF0IjoxNjU5NTA1MzkwLCJleHAiOjE2NjIwMjUzOTB9.8LuW4DXFja1odoUeKdV8tY-aC8dW2iHZFIKARTbDc-I";
@@ -28,14 +28,14 @@ const config = {
 export const getAsync = () => async (dispatch) => {
   try {
     dispatch(startRequest());
-    const response = await axios.get("property-types/getAll", config);
+    const response = await axios.get("listing-types/getAll", config);
 
     if (!response) dispatch(err("Something went wrong"));
 
     const { data } = response;
 
     if (data.success) {
-      dispatch(set(data.propertyTypes));
+      dispatch(set(data.listingTypes));
       dispatch(endRequest(true));
     } else {
       dispatch(err(data.message));
@@ -51,14 +51,14 @@ export const addAsync = (name) => async (dispatch) => {
 
     const reqData = { name };
 
-    const response = await axios.put("property-types/add", reqData, config);
+    const response = await axios.put("listing-types/add", reqData, config);
 
     if (!response) dispatch(err("Something went wrong"));
 
     const { data } = response;
 
     if (data.success) {
-      dispatch(add(data.propertyType));
+      dispatch(add(data.listingType));
       dispatch(endRequest(true));
     } else {
       dispatch(err(data.message));
@@ -75,7 +75,7 @@ export const updateAsync = (name, id) => async (dispatch) => {
     const reqData = { id, name };
 
     const response = await axios.patch(
-      "property-types/update",
+      "listing-types/update",
       reqData,
       config
     );
@@ -85,7 +85,7 @@ export const updateAsync = (name, id) => async (dispatch) => {
     const { data } = response;
 
     if (data.success) {
-      dispatch(update(data.propertyType));
+      dispatch(update(data.listingType));
       dispatch(endRequest(true));
     } else {
       dispatch(err(data.message));
@@ -99,7 +99,7 @@ export const delAsync = (id) => async (dispatch) => {
   try {
     dispatch(startRequest());
 
-    const response = await axios.delete(`property-types/delete/${id}`);
+    const response = await axios.delete(`listing-types/delete/${id}`);
 
     if (!response) dispatch(err("Something went wrong"));
 
@@ -116,4 +116,4 @@ export const delAsync = (id) => async (dispatch) => {
   }
 };
 
-export default propertyTypesSlice.reducer;
+export default listingTypesSlice.reducer;

@@ -174,7 +174,6 @@ export const theme = createTheme({
       tint: "#94DCF5",
       dark: "#171717",
       light: "#FFFFFF",
-      gradient: "linear-gradient( to right, #0F9AA0, #69C17F )",
     },
     success: {
       main: "#14B8A6",

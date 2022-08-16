@@ -28,7 +28,7 @@ import {
   updateAsync,
   delAsync,
   filter,
-} from "../../redux/propertyTypes/propertyTypes.slice";
+} from "../../redux/genders/genders.slice";
 
 const EditItem = ({ name, setName, saveItem, discardItem }) => {
   const handleSubmit = (e) => {
@@ -85,12 +85,11 @@ const Modal = ({ open, handleClose, submit }) => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">Delete Property Type?</DialogTitle>
+      <DialogTitle id="alert-dialog-title">Delete Gender?</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          If you choose to delete the Property Type, all the Listings with the
-          specified property type will be removed. Are you sure you want to
-          proceed?
+          If you choose to delete the gender, all the Users with the specified
+          gender will be removed. Are you sure you want to proceed?
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -105,12 +104,11 @@ const Modal = ({ open, handleClose, submit }) => {
   );
 };
 
-const PropertyTypes = () => {
+const Genders = () => {
   // Redux States
-  const propertyTypes = useSelector(
-    (state) => state.propertyTypes.propertyTypes
-  );
-  const isLoading = useSelector((state) => state.propertyTypes.isLoading);
+  const genders = useSelector((state) => state.genders.genders);
+  const isLoading = useSelector((state) => state.genders.isLoading);
+  // const error = useSelector((state) => state.genders.error);
 
   // Redux Dispatch
   const dispatch = useDispatch();
@@ -144,7 +142,7 @@ const PropertyTypes = () => {
   // Edit Item Preparation
   const editItem = (id) => {
     if (createDraft(id)) {
-      setNewItemName(propertyTypes.find(({ _id }) => id === _id).name);
+      setNewItemName(genders.find(({ _id }) => id === _id).name);
       setIsNewItem(false);
     } else {
       // TODO: Add an alert message here
@@ -262,8 +260,8 @@ const PropertyTypes = () => {
               discardItem={() => setIsNewItem(false)}
             />
           )}
-          {propertyTypes.length > 0
-            ? propertyTypes.map((item, index) => (
+          {genders.length > 0
+            ? genders.map((item, index) => (
                 <Box
                   key={index}
                   sx={{
@@ -291,7 +289,7 @@ const PropertyTypes = () => {
                   )}
                 </Box>
               ))
-            : !isNewItem && <NoItems name="Property Types" />}
+            : !isNewItem && <NoItems name="Genders" />}
         </Box>
       </Container>
     </Box>
@@ -311,7 +309,7 @@ const Toolbar = ({ add, filterText, setFilterText }) => {
         }}
       >
         <Typography sx={{ m: 1 }} variant="h4">
-          Property Types
+          Genders
         </Typography>
         <Box sx={{ m: 1 }}>
           <Button color="secondary" variant="contained" onClick={add}>
@@ -363,4 +361,4 @@ const NoItems = ({ name }) => {
   );
 };
 
-export default PropertyTypes;
+export default Genders;

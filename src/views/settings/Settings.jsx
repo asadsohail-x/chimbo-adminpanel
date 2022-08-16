@@ -73,7 +73,7 @@ const PasswordUpdate = (props) => {
             p: 2,
           }}
         >
-          <Button color="secondary" variant="outlined">
+          <Button color="secondary" variant="contained">
             Update
           </Button>
         </Box>

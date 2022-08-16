@@ -28,9 +28,10 @@ import {
   updateAsync,
   delAsync,
   filter,
-} from "../../redux/propertyTypes/propertyTypes.slice";
+} from "../../redux/occupationTypes/occupationTypes.slice";
 
 const EditItem = ({ name, setName, saveItem, discardItem }) => {
+
   const handleSubmit = (e) => {
     e.preventDefault();
     saveItem();
@@ -85,11 +86,11 @@ const Modal = ({ open, handleClose, submit }) => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">Delete Property Type?</DialogTitle>
+      <DialogTitle id="alert-dialog-title">Delete Occupation Type?</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          If you choose to delete the Property Type, all the Listings with the
-          specified property type will be removed. Are you sure you want to
+          If you choose to delete the Occupation Type, all the users with the
+          specified Occupation type will be removed. Are you sure you want to
           proceed?
         </DialogContentText>
       </DialogContent>
@@ -105,12 +106,12 @@ const Modal = ({ open, handleClose, submit }) => {
   );
 };
 
-const PropertyTypes = () => {
+const OccupationTypes = () => {
   // Redux States
-  const propertyTypes = useSelector(
-    (state) => state.propertyTypes.propertyTypes
+  const occupationTypes = useSelector(
+    (state) => state.occupationTypes.occupationTypes
   );
-  const isLoading = useSelector((state) => state.propertyTypes.isLoading);
+  const isLoading = useSelector((state) => state.occupationTypes.isLoading);
 
   // Redux Dispatch
   const dispatch = useDispatch();
@@ -144,7 +145,7 @@ const PropertyTypes = () => {
   // Edit Item Preparation
   const editItem = (id) => {
     if (createDraft(id)) {
-      setNewItemName(propertyTypes.find(({ _id }) => id === _id).name);
+      setNewItemName(occupationTypes.find(({ _id }) => id === _id).name);
       setIsNewItem(false);
     } else {
       // TODO: Add an alert message here
@@ -262,8 +263,8 @@ const PropertyTypes = () => {
               discardItem={() => setIsNewItem(false)}
             />
           )}
-          {propertyTypes.length > 0
-            ? propertyTypes.map((item, index) => (
+          {occupationTypes.length > 0
+            ? occupationTypes.map((item, index) => (
                 <Box
                   key={index}
                   sx={{
@@ -291,7 +292,7 @@ const PropertyTypes = () => {
                   )}
                 </Box>
               ))
-            : !isNewItem && <NoItems name="Property Types" />}
+            : !isNewItem && <NoItems name="Occupation Types" />}
         </Box>
       </Container>
     </Box>
@@ -311,7 +312,7 @@ const Toolbar = ({ add, filterText, setFilterText }) => {
         }}
       >
         <Typography sx={{ m: 1 }} variant="h4">
-          Property Types
+          Occupation Types
         </Typography>
         <Box sx={{ m: 1 }}>
           <Button color="secondary" variant="contained" onClick={add}>
@@ -363,4 +364,4 @@ const NoItems = ({ name }) => {
   );
 };
 
-export default PropertyTypes;
+export default OccupationTypes;

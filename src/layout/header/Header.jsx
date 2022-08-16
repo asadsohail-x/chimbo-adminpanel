@@ -9,9 +9,7 @@ const HeaderRoot = styled(AppBar)(({ theme }) => ({
   boxShadow: theme.shadows[15],
 }));
 
-const Header = (props) => {
-  const { onSidebarOpen, ...other } = props;
-
+const Header = ({ onSidebarOpen, logout, ...other }) => {
   return (
     <>
       <HeaderRoot
@@ -61,6 +59,7 @@ const Header = (props) => {
                 backgroundColor: "rgba(255,255,255, 0.08)",
               },
             }}
+            onClick={logout}
           >
             <FiLogOut size={21} />
             <span style={{ marginLeft: "8px" }}>Logout</span>

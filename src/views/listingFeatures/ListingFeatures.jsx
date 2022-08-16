@@ -28,9 +28,10 @@ import {
   updateAsync,
   delAsync,
   filter,
-} from "../../redux/propertyTypes/propertyTypes.slice";
+} from "../../redux/listingFeatures/listingFeatures.slice";
 
 const EditItem = ({ name, setName, saveItem, discardItem }) => {
+
   const handleSubmit = (e) => {
     e.preventDefault();
     saveItem();
@@ -85,12 +86,14 @@ const Modal = ({ open, handleClose, submit }) => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">Delete Property Type?</DialogTitle>
+      <DialogTitle id="alert-dialog-title">
+        Delete Listing Features?
+      </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          If you choose to delete the Property Type, all the Listings with the
-          specified property type will be removed. Are you sure you want to
-          proceed?
+          If you choose to delete the Listing Features, all the Listings with
+          the specified listing features will be removed. Are you sure you want
+          to proceed?
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -105,12 +108,12 @@ const Modal = ({ open, handleClose, submit }) => {
   );
 };
 
-const PropertyTypes = () => {
+const ListingFeatures = () => {
   // Redux States
-  const propertyTypes = useSelector(
-    (state) => state.propertyTypes.propertyTypes
+  const listingFeatures = useSelector(
+    (state) => state.listingFeatures.listingFeatures
   );
-  const isLoading = useSelector((state) => state.propertyTypes.isLoading);
+  const isLoading = useSelector((state) => state.listingFeatures.isLoading);
 
   // Redux Dispatch
   const dispatch = useDispatch();
@@ -144,7 +147,7 @@ const PropertyTypes = () => {
   // Edit Item Preparation
   const editItem = (id) => {
     if (createDraft(id)) {
-      setNewItemName(propertyTypes.find(({ _id }) => id === _id).name);
+      setNewItemName(listingFeatures.find(({ _id }) => id === _id).name);
       setIsNewItem(false);
     } else {
       // TODO: Add an alert message here
@@ -262,8 +265,8 @@ const PropertyTypes = () => {
               discardItem={() => setIsNewItem(false)}
             />
           )}
-          {propertyTypes.length > 0
-            ? propertyTypes.map((item, index) => (
+          {listingFeatures.length > 0
+            ? listingFeatures.map((item, index) => (
                 <Box
                   key={index}
                   sx={{
@@ -291,7 +294,7 @@ const PropertyTypes = () => {
                   )}
                 </Box>
               ))
-            : !isNewItem && <NoItems name="Property Types" />}
+            : !isNewItem && <NoItems name="Listing Features" />}
         </Box>
       </Container>
     </Box>
@@ -311,7 +314,7 @@ const Toolbar = ({ add, filterText, setFilterText }) => {
         }}
       >
         <Typography sx={{ m: 1 }} variant="h4">
-          Property Types
+          Listing Features
         </Typography>
         <Box sx={{ m: 1 }}>
           <Button color="secondary" variant="contained" onClick={add}>
@@ -363,4 +366,4 @@ const NoItems = ({ name }) => {
   );
 };
 
-export default PropertyTypes;
+export default ListingFeatures;

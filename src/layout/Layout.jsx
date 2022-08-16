@@ -14,8 +14,7 @@ const LayoutRoot = styled("div")(({ theme }) => ({
   },
 }));
 
-const Layout = (props) => {
-  const { children } = props;
+const Layout = ({ children, logout }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -33,7 +32,7 @@ const Layout = (props) => {
           {children}
         </Box>
       </LayoutRoot>
-      <Header onSidebarOpen={() => setSidebarOpen(true)} />
+      <Header logout={logout} onSidebarOpen={() => setSidebarOpen(true)} />
       <Sidebar onClose={() => setSidebarOpen(false)} open={isSidebarOpen} />
     </>
   );

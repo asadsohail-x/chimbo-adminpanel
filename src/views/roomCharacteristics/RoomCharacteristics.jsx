@@ -3,6 +3,10 @@ import {
   Button,
   Box,
   Container,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
   Typography,
   TextField,
   InputAdornment,
@@ -28,16 +32,16 @@ import {
   updateAsync,
   delAsync,
   filter,
-} from "../../redux/propertyTypes/propertyTypes.slice";
+} from "../../redux/roomCharacteristics/roomCharacteristics.slice";
 
-const EditItem = ({ name, setName, saveItem, discardItem }) => {
+const EditItem = ({ name, setName, type, setType, saveItem, discardItem }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     saveItem();
   };
   return (
     <form onSubmit={handleSubmit} style={{ width: "100%" }}>
-      <Box sx={{ flexGrow: 1, pr: 1 }}>
+      <Box sx={{ width: "100%", pr: 1 }}>
         <TextField
           fullWidth
           color="secondary"
@@ -45,7 +49,26 @@ const EditItem = ({ name, setName, saveItem, discardItem }) => {
           onChange={(e) => setName(e.target.value)}
           placeholder="Item Name"
           variant="outlined"
+          sx={{ m: 1 }}
         />
+        <FormControl fullWidth sx={{ m: 1 }}>
+          <InputLabel color="secondary" id="demo-simple-select-label">
+            Type
+          </InputLabel>
+          <Select
+            fullWidth
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={type}
+            label="Type"
+            color="secondary"
+            onChange={({ target: { value } }) => setType(value)}
+          >
+            <MenuItem value="STRING">String (Text)</MenuItem>
+            <MenuItem value="NUMBER">Number</MenuItem>
+            <MenuItem value="BOOLEAN">Boolean (True/False)</MenuItem>
+          </Select>
+        </FormControl>
       </Box>
       <Box sx={{ width: "100%", justifyContent: "flex-end" }}>
         <Button startIcon={<DeleteIcon />} onClick={discardItem} color="error">
@@ -59,23 +82,41 @@ const EditItem = ({ name, setName, saveItem, discardItem }) => {
   );
 };
 
-const Item = ({ item, editItem, deleteItem }) => (
-  <>
-    <Box sx={{ flexGrow: 1, pr: 1 }}>{item.name}</Box>
-    <div>
-      <Button startIcon={<DeleteIcon />} color="error" onClick={deleteItem}>
-        Delete
-      </Button>
-      <Button
-        startIcon={<EditIcon />}
-        onClick={() => editItem(item._id)}
-        color="info"
-      >
-        Edit
-      </Button>
-    </div>
-  </>
-);
+const Item = ({ item: { name, type, _id }, editItem, deleteItem }) => {
+  let itemType = "";
+
+  switch (type) {
+    case "STRING":
+      itemType = "String (Text)";
+      break;
+    case "NUMBER":
+      itemType = "Number";
+      break;
+    case "BOOLEAN":
+      itemType = "Boolean (True/False)";
+      break;
+  }
+  return (
+    <>
+      <Box sx={{ flexGrow: 1, pr: 1 }}>{name}</Box>
+      <Box sx={{ pr: 1, fontWeight: "lighter" }}>
+        <i>{itemType}</i>
+      </Box>
+      <div>
+        <Button startIcon={<DeleteIcon />} color="error" onClick={deleteItem}>
+          Delete
+        </Button>
+        <Button
+          startIcon={<EditIcon />}
+          onClick={() => editItem(_id)}
+          color="info"
+        >
+          Edit
+        </Button>
+      </div>
+    </>
+  );
+};
 
 const Modal = ({ open, handleClose, submit }) => {
   return (
@@ -85,11 +126,11 @@ const Modal = ({ open, handleClose, submit }) => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">Delete Property Type?</DialogTitle>
+      <DialogTitle id="alert-dialog-title">Delete Room Characteristic?</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          If you choose to delete the Property Type, all the Listings with the
-          specified property type will be removed. Are you sure you want to
+          If you choose to delete the room characteristic, all the Users with the
+          specified room characteristic will be removed. Are you sure you want to
           proceed?
         </DialogContentText>
       </DialogContent>
@@ -105,12 +146,13 @@ const Modal = ({ open, handleClose, submit }) => {
   );
 };
 
-const PropertyTypes = () => {
+const RoomCharacteristics = () => {
   // Redux States
-  const propertyTypes = useSelector(
-    (state) => state.propertyTypes.propertyTypes
+  const roomCharacteristics = useSelector(
+    (state) => state.roomCharacteristics.roomCharacteristics
   );
-  const isLoading = useSelector((state) => state.propertyTypes.isLoading);
+  const isLoading = useSelector((state) => state.roomCharacteristics.isLoading);
+  // const error = useSelector((state) => state.roomCharacteristics.error);
 
   // Redux Dispatch
   const dispatch = useDispatch();
@@ -124,6 +166,7 @@ const PropertyTypes = () => {
   const [draft, setDraft] = useState(null);
   const [isNewItem, setIsNewItem] = useState(false);
   const [newItemName, setNewItemName] = useState("");
+  const [newItemType, setNewItemType] = useState("");
   const [filterText, setFilterText] = useState("");
   const [isModalOpen, setOpenModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
@@ -137,6 +180,7 @@ const PropertyTypes = () => {
       );
     } else {
       setNewItemName("");
+      setNewItemType("");
       setIsNewItem(true);
     }
   };
@@ -144,7 +188,9 @@ const PropertyTypes = () => {
   // Edit Item Preparation
   const editItem = (id) => {
     if (createDraft(id)) {
-      setNewItemName(propertyTypes.find(({ _id }) => id === _id).name);
+      const { name, type } = roomCharacteristics.find(({ _id }) => id === _id);
+      setNewItemName(name);
+      setNewItemType(type);
       setIsNewItem(false);
     } else {
       // TODO: Add an alert message here
@@ -172,12 +218,17 @@ const PropertyTypes = () => {
       return;
     }
 
+    if (newItemType.trim() === "") {
+      console.log("No Type Selected");
+      return;
+    }
+
     if (isNewItem) {
-      dispatch(addAsync(newItemName));
+      dispatch(addAsync(newItemName, newItemType));
 
       setIsNewItem(false);
     } else {
-      dispatch(updateAsync(newItemName, id));
+      dispatch(updateAsync(newItemName, newItemType, id));
 
       setDraft(null);
     }
@@ -258,12 +309,14 @@ const PropertyTypes = () => {
             <EditItem
               name={newItemName}
               setName={setNewItemName}
+              type={newItemType}
+              setType={setNewItemType}
               saveItem={() => saveItem()}
               discardItem={() => setIsNewItem(false)}
             />
           )}
-          {propertyTypes.length > 0
-            ? propertyTypes.map((item, index) => (
+          {roomCharacteristics.length > 0
+            ? roomCharacteristics.map((item, index) => (
                 <Box
                   key={index}
                   sx={{
@@ -279,6 +332,8 @@ const PropertyTypes = () => {
                     <EditItem
                       name={newItemName}
                       setName={setNewItemName}
+                      type={newItemType}
+                      setType={setNewItemType}
                       saveItem={() => saveItem(item._id)}
                       discardItem={() => discardItem(item._id)}
                     />
@@ -291,7 +346,7 @@ const PropertyTypes = () => {
                   )}
                 </Box>
               ))
-            : !isNewItem && <NoItems name="Property Types" />}
+            : !isNewItem && <NoItems name="Room Characteristics" />}
         </Box>
       </Container>
     </Box>
@@ -311,7 +366,7 @@ const Toolbar = ({ add, filterText, setFilterText }) => {
         }}
       >
         <Typography sx={{ m: 1 }} variant="h4">
-          Property Types
+          Room Characteristics
         </Typography>
         <Box sx={{ m: 1 }}>
           <Button color="secondary" variant="contained" onClick={add}>
@@ -363,4 +418,4 @@ const NoItems = ({ name }) => {
   );
 };
 
-export default PropertyTypes;
+export default RoomCharacteristics;

@@ -1,9 +1,15 @@
-import { useState } from "react";
+import { useRef, useState, useEffect, Fragment } from "react";
 import {
   Button,
   Box,
   Container,
   Card,
+  Divider,
+  Dialog,
+  ImageList,
+  DialogContent,
+  IconButton,
+  ImageListItem,
   TextField,
   InputAdornment,
   SvgIcon,
@@ -17,35 +23,37 @@ import {
 
 import SearchIcon from "@mui/icons-material/Search";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import UserModal from "./UserModal";
-import UserFilterModal from "./UserFilterModal";
+import CloseIcon from "@mui/icons-material/Close";
+import FlagIcon from "@mui/icons-material/Flag";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ListingModal from './ListingModal';
 
-const UsersTable = ({ users }) => {
+const ListingsTable = ({ listings }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
     <Card>
-      <UserModal open={modalOpen} handleClose={() => setModalOpen(false)} />
+      <ListingModal open={modalOpen} handleClose={() => setModalOpen(false)} />
       <Box sx={{ overflowX: "auto" }}>
         <Box sx={{ minWidth: 768 }}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell>#</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Total Posts</TableCell>
-                <TableCell>Joined On</TableCell>
+                <TableCell>Location</TableCell>
+                <TableCell>Price</TableCell>
+                <TableCell>Posted By</TableCell>
+                <TableCell>Posted On</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map((item, i) => (
+              {listings.map((item, i) => (
                 <TableRow hover key={i}>
                   <TableCell>{i + 1}</TableCell>
+                  <TableCell>Street 7A, NY</TableCell>
+                  <TableCell>99.99$</TableCell>
                   <TableCell>John Doe</TableCell>
-                  <TableCell>john.doe@mail.com</TableCell>
-                  <TableCell>100</TableCell>
                   <TableCell>Tue Aug 16 2022 06:49:44</TableCell>
                   <TableCell>
                     <Button
@@ -66,10 +74,8 @@ const UsersTable = ({ users }) => {
   );
 };
 
-const Users = () => {
+const Listings = () => {
   const [filterText, setFilterText] = useState("");
-  const [filterModalOpen, setFilterModalOpen] = useState(false);
-
   return (
     <Box
       component="main"
@@ -80,28 +86,19 @@ const Users = () => {
     >
       <Container style={{ maxWidth: 1000 }}>
         <Toolbar
-          modalOpen={filterModalOpen}
-          handleClose={() => setFilterModalOpen(false)}
-          handleOpen={() => setFilterModalOpen(true)}
+          add={() => console.log("add")}
           filterText={filterText}
           setFilterText={setFilterText}
         />
-        <UsersTable users={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]} />
+        <ListingsTable listings={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]} />
       </Container>
     </Box>
   );
 };
 
-const Toolbar = ({
-  modalOpen,
-  handleOpen,
-  handleClose,
-  filterText,
-  setFilterText,
-}) => {
+const Toolbar = ({ add, filterText, setFilterText }) => {
   return (
     <>
-      <UserFilterModal open={modalOpen} handleClose={handleClose} />
       <Box
         sx={{
           alignItems: "center",
@@ -112,14 +109,10 @@ const Toolbar = ({
         }}
       >
         <Typography sx={{ m: 1 }} variant="h4">
-          Users
+          Listings
         </Typography>
         <Box sx={{ m: 1 }}>
-          <Button
-            color="secondary"
-            variant="contained"
-            onClick={() => console.log("Add User")}
-          >
+          <Button color="secondary" variant="contained" onClick={add}>
             Add
           </Button>
         </Box>
@@ -144,12 +137,12 @@ const Toolbar = ({
             variant="outlined"
           />
         </Box>
-        <Button color="secondary" variant="outlined" onClick={handleOpen}>
+        {/* <Button color="secondary" variant="outlined" onClick={add}>
           Filters
-        </Button>
+        </Button> */}
       </Box>
     </>
   );
 };
 
-export default Users;
+export default Listings;
