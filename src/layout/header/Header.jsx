@@ -3,13 +3,18 @@ import { AppBar, Button, Box, IconButton, Toolbar } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 // import SearchIcon from "@mui/icons-material/Search";
 import { FiLogOut } from "react-icons/fi";
+import { useCookies } from "react-cookie";
 
 const HeaderRoot = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.custom.light,
   boxShadow: theme.shadows[15],
 }));
 
-const Header = ({ onSidebarOpen, logout, ...other }) => {
+const Header = ({ onSidebarOpen, ...other }) => {
+  const [,,removeCookie] = useCookies(["user"])
+
+  const logout = () => removeCookie("user");
+
   return (
     <>
       <HeaderRoot

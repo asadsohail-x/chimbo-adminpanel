@@ -9,7 +9,10 @@ import listingFeaturesReducer from "./listingFeatures/listingFeatures.slice";
 import specificationsReducer from "./specifications/specifications.slice";
 import roomCharacteristicsReducer from "./roomCharacteristics/roomCharacteristics.slice";
 
+import adminReducer from './admin/admin.slice'
+
 const rootReducer = combineReducers({
+  admin: adminReducer,
   propertyTypes: propertyTypesReducer,
   heatingTypes: heatingTypesReducer,
   listingTypes: listingTypesReducer,

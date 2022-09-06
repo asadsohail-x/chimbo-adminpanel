@@ -1,21 +1,71 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
+
 import Logo from "../../assets/logo.png";
 
-const Login = ({ login }) => {
+import { useCookies } from "react-cookie";
+
+import { useDispatch, useSelector } from "react-redux";
+
+import { loginAsync, clear } from "../../redux/admin/admin.slice";
+
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+
+import Loader from "../../Loader";
+
+const Login = () => {
   const [formState, setFormState] = useState({
     email: "",
     password: "",
   });
 
+  const [, setCookie] = useCookies(["user"]);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const isLoggedIn = useSelector((state) => state.admin.isLoggedIn);
+  const isLoading = useSelector((state) => state.admin.isLoading);
+  const data = useSelector((state) => state.admin.data);
+  const error = useSelector((state) => state.admin.error);
+
+  useEffect(() => {
+    if (!isLoading && error) {
+      toast.error(error);
+    }
+
+    return () => {
+      dispatch(clear());
+    };
+  }, [error, isLoading, dispatch]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    login();
+
+    // Dispatch Login Action
+    dispatch(loginAsync(formState.email, formState.password));
   };
+
+  // handle admin state change
+  useEffect(() => {
+    if (!isLoading) {
+      if (isLoggedIn) {
+        if (Object.keys(data).length) {
+          setCookie("user", { ...data, loggedIn: true });
+          navigate("/");
+        }
+      }
+    }
+  }, [data, isLoading, isLoggedIn, navigate, setCookie]);
 
   const handleChange = ({ target }) => {
     setFormState({ ...formState, [target.name]: target.value });
   };
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <Box
