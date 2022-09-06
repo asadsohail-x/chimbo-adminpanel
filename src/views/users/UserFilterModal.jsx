@@ -12,9 +12,6 @@ import {
 } from "@mui/material";
 
 import CloseIcon from "@mui/icons-material/Close";
-import BlockIcon from "@mui/icons-material/Block";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 const UserFilterModal = ({ open, handleClose }) => {
   const modalContentRef = useRef(null);

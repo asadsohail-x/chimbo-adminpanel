@@ -1,15 +1,9 @@
-import { useRef, useState, useEffect, Fragment } from "react";
+import { useState, Fragment } from "react";
 import {
   Button,
   Box,
   Container,
   Card,
-  Divider,
-  Dialog,
-  ImageList,
-  DialogContent,
-  IconButton,
-  ImageListItem,
   TextField,
   InputAdornment,
   SvgIcon,
@@ -23,9 +17,6 @@ import {
 
 import SearchIcon from "@mui/icons-material/Search";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import CloseIcon from "@mui/icons-material/Close";
-import FlagIcon from "@mui/icons-material/Flag";
-import DeleteIcon from "@mui/icons-material/Delete";
 import ListingModal from './ListingModal';
 
 const ListingsTable = ({ listings }) => {

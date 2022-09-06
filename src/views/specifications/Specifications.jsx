@@ -95,6 +95,7 @@ const Item = ({ item: { name, type, _id }, editItem, deleteItem }) => {
     case "BOOLEAN":
       itemType = "Boolean (True/False)";
       break;
+    default: break;
   }
   return (
     <>

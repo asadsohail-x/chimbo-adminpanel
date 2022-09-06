@@ -3,12 +3,18 @@ import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import Logo from "../../assets/logo.png";
 
 const Login = ({ login }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formState, setFormState] = useState({
+    email: "",
+    password: "",
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     login();
+  };
+
+  const handleChange = ({ target }) => {
+    setFormState({ ...formState, [target.name]: target.value });
   };
 
   return (
@@ -40,9 +46,9 @@ const Login = ({ login }) => {
             label="Email Address"
             margin="normal"
             name="email"
-            onChange={({ target: { value } }) => setEmail(value)}
+            onChange={handleChange}
             type="email"
-            value={email}
+            value={formState.email}
             color="secondary"
             variant="outlined"
           />
@@ -51,9 +57,9 @@ const Login = ({ login }) => {
             label="Password"
             margin="normal"
             name="password"
-            onChange={({ target: { value } }) => setPassword(value)}
+            onChange={handleChange}
             type="password"
-            value={password}
+            value={formState.password}
             color="secondary"
             variant="outlined"
           />
